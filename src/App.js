@@ -1,24 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useQuery } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
 
 function App() {
+  const { loading, error, data } = useQuery(gql`
+    {
+      restaurants {
+        name
+      }
+    }
+  `);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ul>
+        {data.restaurants.map(restaurant => (
+          <li key={restaurant.name}>
+            { restaurant.name }
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
